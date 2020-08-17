@@ -3,9 +3,9 @@
 const week = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'], 
     weekEn = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     now = new Date(),
-    dayOfWeek = now.getDay();
-
-
+    dayOfWeek = now.getDay(),
+    olElem = document.getElementById('olElement');
+    
     delete week[dayOfWeek-1];
 
     let Day;
@@ -27,10 +27,14 @@ const week = ['Понедельник', 'Вторник', 'Среда', 'Чет�
 
   for (let value of week){
   if ( value === 'Суббота' || value === 'Воскресенье'){
-   console.log('%c%s', 'font-style: italic', value);
+  olElem.insertAdjacentHTML('beforeend', `<li style="font-style: italic">${value}</li>`);
   } else if (value === undefined){
-    console.log('%c%s', 'font-weight: bold', Day);
+    if ( Day === 'Суббота' || Day === 'Воскресенье'){
+      olElem.insertAdjacentHTML('beforeend', `<li style="font-style: italic; font-weight: bold">${Day}</li>`);
+      } else {
+    olElem.insertAdjacentHTML('beforeend', `<li style="font-weight: bold">${Day}</li>`);
+      }
   } else {
-    console.log(value);
+    olElem.insertAdjacentHTML('beforeend', `<li>${value}</li>`);
   }
  }
