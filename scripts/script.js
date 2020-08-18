@@ -1,12 +1,11 @@
 'use strict';
 
-const week = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'], 
-    weekEn = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    now = new Date(),
+const getDateTime = function(){
+const now = new Date(),
     dayOfWeek = now.getDay(),
-    olElem = document.getElementById('olElement');
-    
-    delete week[dayOfWeek-1];
+    nowMonth = now.getMonth(),
+    olElem = document.getElementById('olElement'),
+    divElement = document.getElementById('div2-Element');
 
     let Day;
     switch ( dayOfWeek ) {
@@ -25,16 +24,70 @@ const week = ['Понедельник', 'Вторник', 'Среда', 'Чет�
       case 7 : Day = 'Воскресенье';
         break;}
 
-  for (let value of week){
-  if ( value === 'Суббота' || value === 'Воскресенье'){
-  olElem.insertAdjacentHTML('beforeend', `<li style="font-style: italic">${value}</li>`);
-  } else if (value === undefined){
-    if ( Day === 'Суббота' || Day === 'Воскресенье'){
-      olElem.insertAdjacentHTML('beforeend', `<li style="font-style: italic; font-weight: bold">${Day}</li>`);
-      } else {
-    olElem.insertAdjacentHTML('beforeend', `<li style="font-weight: bold">${Day}</li>`);
+      let month;
+      switch ( nowMonth ) {
+        case 1 : month = 'Января‎';
+          break;
+        case 2 : month = 'Февраля‎';
+          break;
+        case 3 : month = 'Март‎а';
+          break;
+        case 4 : month = 'Апреля';
+          break;
+        case 5 : month = 'Мая';
+          break;
+        case 6 : month = 'Июня';
+          break;
+        case 7 : month = 'Июля';
+          break;
+        case 8 : month = 'Августа';
+          break;
+        case 9 : month = 'Сентября';
+          break;
+        case 10 : month = 'Октября';
+          break;
+        case 11 : month = 'Ноября';
+          break;
+        case 12 : month = 'Декабря';
+          break;}
+
+    let HourName;
+    const getHourName = function(n){
+      if (n >= 1 && n <= 4 || n >= 22 && n <= 24){
+        return 'часа';
+      } else if (n >= 5 && n <= 20 || n === 0){
+        return 'часов';
       }
-  } else {
-    olElem.insertAdjacentHTML('beforeend', `<li>${value}</li>`);
-  }
- }
+      else {
+        return 'час';
+      }
+    }; 
+
+    HourName = getHourName(now.getHours());
+
+    olElem.textContent = `Сегодня ${Day}, ${now.getDate()} ${month} ${now.getFullYear()} года, 
+    ${now.getHours()} ${HourName} ${now.getMinutes()} минут ${now.getSeconds()} секунды`;
+
+    const getZero = function(n){
+      if(n <= 9){
+        return '0' + n;
+      } else {
+        return n;
+      }
+    };
+
+    divElement.textContent = `${getZero(now.getDate())}.${getZero(now.getMonth())}.${now.getFullYear()} -  
+    ${getZero(now.getHours())}.${getZero(now.getMinutes())}.${getZero(now.getSeconds())}`;
+
+   };
+
+  setInterval(getDateTime, 1000);
+
+  // console.log(now);
+  // console.log('now.getTime() :', now.getTime());
+  // console.log('now.getFullYear() :', now.getFullYear());
+  // console.log('now.getMonth() :', now.getMonth());
+  // console.log('now.getDate() :', now.getDate());
+  // console.log('now.getHours() :', now.getHours());
+  // console.log('now.getMinutes() :', now.getMinutes());
+  // console.log('now.getDay() :', dayOfWeek);
