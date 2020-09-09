@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded',function(){
             timerMinutes.textContent = addFistNum(timer.minutes);
             timerSeconds.textContent = addFistNum(timer.seconds);
            
-            setInterval(updateClock, 1000)
+            setTimeout(updateClock, 1000)
             } else {
                 timerHours.textContent = '00';
                 timerMinutes.textContent = '00';
@@ -361,8 +361,9 @@ window.addEventListener('DOMContentLoaded',function(){
     let timerId;
 
          const animateTotal = (n, total) => {
+            clearInterval(timerId);
              timerId  = setInterval(() => {
-            // console.log(total)
+             console.log(timerId)
                 n += 55;
                 if (n >= total){
                     totalValue.textContent = total;
@@ -370,7 +371,6 @@ window.addEventListener('DOMContentLoaded',function(){
                     return;
                 }
                 totalValue.textContent = n;
-
             }, 1);
         };
 
@@ -417,7 +417,6 @@ window.addEventListener('DOMContentLoaded',function(){
              //     }
 
              if (target.matches('select') || target.matches('input')){
-                clearInterval(timerId);
                 countSum();    
             }
          });
