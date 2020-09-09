@@ -358,8 +358,24 @@ window.addEventListener('DOMContentLoaded',function(){
          calcCount = document.querySelector('.calc-count'),
          totalValue = document.getElementById('total');
 
+    let timerId;
+
+         const animateTotal = (n, total) => {
+             timerId  = setInterval(() => {
+            // console.log(total)
+                n += 55;
+                if (n >= total){
+                    totalValue.textContent = total;
+                    clearInterval(timerId);
+                    return;
+                }
+                totalValue.textContent = n;
+
+            }, 1);
+        };
+
          const countSum = () => {
-             let total = 0,  
+             let total = 0,
                  countValue = 1,
                  dayValue = 1;
              const typeValue = calcType.options[calcType.selectedIndex].value,
@@ -382,17 +398,7 @@ window.addEventListener('DOMContentLoaded',function(){
             let n = 0;
 
             if (total > 0){
-                const animateTotal = setInterval(() => {
-                // console.log(total)
-                    n += 55;
-                    if (n >= total){
-                        totalValue.textContent = total;
-                        clearInterval(animateTotal);
-                        return;
-                    }
-                    totalValue.textContent = n;
-
-                }, 1);
+                animateTotal(n, total);
             }
             //  totalValue.textContent = total;
          };
@@ -411,8 +417,9 @@ window.addEventListener('DOMContentLoaded',function(){
              //     }
 
              if (target.matches('select') || target.matches('input')){
-                countSum();
-             }
+                clearInterval(timerId);
+                countSum();    
+            }
          });
 
     };
