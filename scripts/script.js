@@ -358,24 +358,8 @@ window.addEventListener('DOMContentLoaded',function(){
          calcCount = document.querySelector('.calc-count'),
          totalValue = document.getElementById('total');
 
-    let timerId;
-
-         const animateTotal = (n, total) => {
-            clearInterval(timerId);
-             timerId  = setInterval(() => {
-             console.log(timerId)
-                n += 55;
-                if (n >= total){
-                    totalValue.textContent = total;
-                    clearInterval(timerId);
-                    return;
-                }
-                totalValue.textContent = n;
-            }, 1);
-        };
-
          const countSum = () => {
-             let total = 0,
+             let total = 0,  
                  countValue = 1,
                  dayValue = 1;
              const typeValue = calcType.options[calcType.selectedIndex].value,
@@ -398,7 +382,17 @@ window.addEventListener('DOMContentLoaded',function(){
             let n = 0;
 
             if (total > 0){
-                animateTotal(n, total);
+                const animateTotal = setInterval(() => {
+                // console.log(total)
+                    n += 55;
+                    if (n >= total){
+                        totalValue.textContent = total;
+                        clearInterval(animateTotal);
+                        return;
+                    }
+                    totalValue.textContent = n;
+
+                }, 1);
             }
             //  totalValue.textContent = total;
          };
@@ -417,14 +411,121 @@ window.addEventListener('DOMContentLoaded',function(){
              //     }
 
              if (target.matches('select') || target.matches('input')){
-                countSum();    
-            }
+                countSum();
+             }
          });
 
     };
 
     calc(100);
 
+    //send-ajax-form
 
+    const sendForm = () => {
 
-});
+        const errorMessage = 'Что-то пошло не так....',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+        const forms = document.querySelectorAll('form');
+        
+        const statusMassage = document.createElement('div'); 
+        statusMassage.style.csstext = 'font-size: 2rem; ';
+        statusMassage.setAttribute("style","height: 12rem; display: inline-block;");
+
+        const animateGif = document.createElement("img");
+            animateGif.setAttribute("src","./animation.gif");
+            animateGif.setAttribute("alt","animation preload");
+            animateGif.setAttribute("style","height: 100%");
+
+        forms.forEach((elem) => {
+            elem.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const target = event.target,
+                        form = target.closest('form');
+
+                const inputs = form.querySelectorAll('input');
+
+                inputs.forEach((elem) => {
+                    // console.log(elem);
+                elem.value = '';
+                });
+
+                form.appendChild(statusMassage);
+                // statusMassage.textContent = loadMessage;
+                statusMassage.append(animateGif);
+                const formData = new FormData(form);
+                let body = {};
+
+                // for (let val of formData.entries()){
+                //     body[val[0]] = val[1];
+                // }
+
+                formData.forEach((val, key) => {
+                    body[key] = val;
+                });
+
+                postData(body, 
+                    () => {
+                    statusMassage.setAttribute("style","height: ayto;");
+                    statusMassage.textContent = successMessage; 
+                    }, 
+                    (error) => {
+                    statusMassage.setAttribute("style","height: ayto;");
+                    statusMassage.textContent = errorMessage; 
+                    console.error(error);
+                    });
+            });
+        });
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () =>{
+                if (request.readyState !== 4){
+                    return;
+                } 
+                if (request.status === 200){
+                    outputData();
+             } else {
+                    errorData(request.status);
+               }
+            });
+
+            request.open('POST', './server.php');
+            // request.setRequestHeader('Content-Type', 'multipart/form-data');
+            request.setRequestHeader('Content-Type', 'application/json');
+            
+
+            request.send(JSON.stringify(body));
+        };
+
+    };
+
+    sendForm();
+
+    //validate form 
+
+    const validateForm = () => {
+        const phoneFroms = document.querySelectorAll('.form-phone'),
+                form2name = document.getElementById('form2name'),
+                form2message = document.getElementById('form2message');
+
+            phoneFroms.forEach((elem) => {
+                elem.addEventListener('input', () =>{
+                             
+                    elem.value = elem.value.replace(/[^\+\d]/g, '');
+                });
+            });
+
+            form2name.addEventListener('input', () =>{
+            form2name.value = form2name.value.replace(/[^а-яё ]/gi, '');
+            });
+            
+            form2message.addEventListener('input', () =>{
+                form2message.value = form2message.value.replace(/[^а-яё ]/gi, '');
+                });
+    };
+
+    validateForm();
+
+ });
